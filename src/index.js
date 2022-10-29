@@ -34,28 +34,20 @@ async function getPopularCPUGPU() {
       .then(function (response) {
         const dom = new JSDOM(response.data.list)
         const data = dom.window.document.querySelectorAll("a")
-        data.forEach((datapoint) => {
-          const text = data[datapoint].textContent
-          if (typeof text !== 'undefined' || text.length <= 6) return
-          searchTerms.add(encodeURIComponent(text))
-        })
-        // for (const datapoint in data) {
-        //   if (typeof data[datapoint].textContent !== 'undefined') searchTerms.add(encodeURIComponent(data[datapoint].textContent))
-        // }
+        for (const datapoint in data) {
+          if (typeof data[datapoint].textContent !== 'undefined' && data[datapoint].textContent.length > 9) searchTerms.add(encodeURIComponent(data[datapoint].textContent))
+        }
       })
       .catch(function (error) {
         console.log(error);
       });
       await delay(1000)
     }
-    const uniqueSearchTerms = [...new Set(searchTerms)]
     return searchTerms
   } catch (e) {
     console.error(e);
   }
 }
-
-
 
 async function main() {
   let failCount = 0
@@ -77,9 +69,9 @@ async function main() {
             'Sec-Fetch-Dest': 'empty', 
             'Sec-Fetch-Mode': 'cors', 
             'Sec-Fetch-Site': 'same-origin', 
-            'Referer': 'https://www.lazada.com.my/catalog/?q=rtx+3080+ti&_keyori=ss&from=input&spm=a2o4k.searchlist.search.go.a5c428b9BoMgTR', 
+            'Referer': 'https://www.lazada.com.my/catalog/?q=rtx+3080+ti&_keyori=ss&from=input&spm=a2o4k.searchlist.search.go.44cd28b9EHMiBH', 
             'Connection': 'keep-alive', 
-            'Cookie': '__wpkreporterwid_=2630b6dd-7f13-4e34-08a2-62c8546c6d8b; lzd_cid=b0db399a-2c52-4bca-b3da-a391f190c413; t_uid=b0db399a-2c52-4bca-b3da-a391f190c413; t_fv=1660376845807; _bl_uid=06lLe69draXlktiz65R2nn6rnXtL; isg=BP39jTNbQkXYr-dJoonVx2egD1n3mjHs5O7cYb9CMdSD9h0oh-hcvtJgoKKw7Umk; l=eBMIpH8nL3bcwMsWXOfahurza77tSIOYYuPzaNbMiOCPOr1e52iAW6ysbJLwCn1Nh6DDR3SVgl72BeYBqjj29GGW1Y9tnxHmn; hng=MY|en-MY|MYR|458; userLanguageML=en; sgcookie=E100Pj6M1%2FSMjgJbcfJOVmyXxK640uUxit5koQv88iNDWZbaRKWM80AC1K4%2FGTu7tJZPYo9xpPdCILNK5Nr7l%2BaL3F4ob%2FhONwjNhiwjd1FY6s8%3D; miidlaz=miidgg5oku1gecha4uiule; lzd_click_id=clkgg5oku1gecha4uduld; _m_h5_tk=c306a9b7230026809d3ddf14181510ff_1666813137073; _m_h5_tk_enc=9e39d0fc45c85ca577b4aaea401dffa1; lzd_sid=12faae431b1fbf5e81e5fb00f6e5d242; _tb_token_=5eebfee8a319b; lzd_uid=300000374110; lzd_uti=%7B%22fpd%22%3A%222021-01-08%22%2C%22lpd%22%3A%222021-01-12%22%2C%22cnt%22%3A%2221%22%7D; exlaz=c_lzd_byr:mm_159370573_52051064_2011001151!my1230001:clkgg5oku1gecha4uduld::; t_sid=c3SprTjcAGhgvH8Zi2GSnQWHWEdJioFt; utm_channel=NA; x5sec=7b22617365727665722d6c617a6164613b32223a223165366662363233663066346533613862376463623836643236363264396563434d6e6e355a6f47454f6162705a7543752b446e2f774561446a4d774d4441774d444d334e4445784d44737a4d4a7a687837494451414d3d227d; hng=MY|en-MY|MYR|458; hng.sig=3PRPmcBmKLS4UwrxxIzxYKE2BjFcClNbRbYGSaUai_0', 
+            'Cookie': '__wpkreporterwid_=2630b6dd-7f13-4e34-08a2-62c8546c6d8b; lzd_cid=b0db399a-2c52-4bca-b3da-a391f190c413; t_uid=b0db399a-2c52-4bca-b3da-a391f190c413; t_fv=1660376845807; _bl_uid=06lLe69draXlktiz65R2nn6rnXtL; isg=BPb2GH9DiRz9AXwcHTRuijAVRCz4FzpRU3snFGDf4ll0o5Y9yKeKYVyVu_fPEDJp; l=eBMIpH8nL3bcwqofmOfahurza77OSIOYYuPzaNbMiOCPOJ1H5HaCW6yIp7YMC31Nh6kXR3SVgl72BeYBqj02zHUD1Y9tnxDmn; miidlaz=miidgg5oku1gecha4uiule; lzd_click_id=clkgg5oku1gecha4uduld; _m_h5_tk=417f776803a0cb617826c95006cb9b7a_1667065766897; _m_h5_tk_enc=5ffb73d99515f6b36c88209f1e566d9a; lzd_sid=12faae431b1fbf5e81e5fb00f6e5d242; _tb_token_=5eebfee8a319b; lzd_uid=300000374110; lzd_uti=%7B%22fpd%22%3A%222021-01-08%22%2C%22lpd%22%3A%222021-01-12%22%2C%22cnt%22%3A%2221%22%7D; exlaz=c_lzd_byr:mm_159370573_52051064_2011001151!my1230001:clkgg5oku1gecha4uduld::; hng=MY|en-MY|MYR|458; userLanguageML=en; t_sid=FEgMmJINDMtgXJKzfRRzVaxHj80yUduq; utm_channel=NA; hng=MY|en-MY|MYR|458; hng.sig=3PRPmcBmKLS4UwrxxIzxYKE2BjFcClNbRbYGSaUai_0', 
             'TE': 'trailers'
           }
         };

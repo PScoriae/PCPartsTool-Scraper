@@ -8,7 +8,7 @@ const delay = ms => new Promise(resolve => setTimeout(resolve, ms))
 
 async function getPopularCPUGPU() {
   try {
-    const searchTerms = []
+    const searchTerms = new Set()
     const urls = ['https://www.techpowerup.com/cpu-specs/?sort=name&ajax=1', 'https://www.techpowerup.com/gpu-specs/?sort=name&ajax=1']
     for (const url of urls) {
       const config = {
@@ -34,15 +34,21 @@ async function getPopularCPUGPU() {
       .then(function (response) {
         const dom = new JSDOM(response.data.list)
         const data = dom.window.document.querySelectorAll("a")
-        for (const datapoint in data) {
-          if (typeof data[datapoint].textContent !== 'undefined') searchTerms.push(encodeURIComponent(data[datapoint].textContent))
-        }
+        data.forEach((datapoint) => {
+          const text = data[datapoint].textContent
+          if (typeof text !== 'undefined' || text.length <= 6) return
+          searchTerms.add(encodeURIComponent(text))
+        })
+        // for (const datapoint in data) {
+        //   if (typeof data[datapoint].textContent !== 'undefined') searchTerms.add(encodeURIComponent(data[datapoint].textContent))
+        // }
       })
       .catch(function (error) {
         console.log(error);
       });
       await delay(1000)
     }
+    const uniqueSearchTerms = [...new Set(searchTerms)]
     return searchTerms
   } catch (e) {
     console.error(e);
@@ -52,9 +58,8 @@ async function getPopularCPUGPU() {
 
 
 async function main() {
-
+  let failCount = 0
   try {
-    let failCount = 0
     const searchTerms = await getPopularCPUGPU()
     for (let i = 1; i < 3; i++) {
       for (const searchTerm of searchTerms) {
@@ -86,18 +91,18 @@ async function main() {
         })
         .catch(function (error) {
           console.log(error);
+          if (error instanceof TypeError) failCount += 1
+          if (failCount === 5) {
+            console.error('seems to be rate limited. exiting program')
+            process.exit()
+          }
         });
         // prevent hitting servers too often
-        await delay(3000)
+        await delay(5000)
       }
     }
   } catch (e) {
     console.error(e);
-    if (e instanceof TypeError) failCount += 1
-    if (failCount === 5) {
-      console.error('seems to be rate limited. exiting program')
-      process.exit()
-    }
   }
 }
 

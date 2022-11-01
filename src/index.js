@@ -8,12 +8,12 @@ const { MongoClient } = require("mongodb");
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
 async function getPopularCPUGPU() {
-  const searchTerms = {}
+  const searchTerms = {};
   const urls = [
     "https://www.techpowerup.com/cpu-specs/?sort=name&ajax=1",
     "https://www.techpowerup.com/gpu-specs/?sort=name&ajax=1",
   ];
-  const keys = ['cpu', 'gpu']
+  const keys = ["cpu", "gpu"];
   for (let i = 0; i < urls.length; i++) {
     const currSearchTerms = new Set();
     const config = {
@@ -36,9 +36,11 @@ async function getPopularCPUGPU() {
             typeof data[datapoint].textContent !== "undefined" &&
             data[datapoint].textContent.length > 9
           )
-            currSearchTerms.add(encodeURIComponent(data[datapoint].textContent));
+            currSearchTerms.add(
+              encodeURIComponent(data[datapoint].textContent)
+            );
         }
-        searchTerms[keys[i]] = currSearchTerms
+        searchTerms[keys[i]] = currSearchTerms;
       })
       .catch(function (error) {
         console.log(error);
@@ -49,12 +51,22 @@ async function getPopularCPUGPU() {
 
 async function getSearchTerms() {
   const searchTerms = await getPopularCPUGPU();
-  searchTerms['motherboard'] = ["intel motherboard", "amd motherboard"]
-  searchTerms['memory'] = ["ddr3 ram", "ddr4 ram", "ddr5 ram"]
-  searchTerms['psu'] = ["atx power supply", "sfx power supply"]
-  searchTerms['cooling'] = ["cpu cooler", "cpu liquid cooler", "pc fans", "pc case fans"]
-  searchTerms['case'] = ["pc case", "atx pc case", "micro atx pc case", "mini itx pc case"]
-  searchTerms['storage'] = ["ssd", "nvme", "internal hard drive"]
+  searchTerms["motherboard"] = ["intel motherboard", "amd motherboard"];
+  searchTerms["memory"] = ["ddr3 ram", "ddr4 ram", "ddr5 ram"];
+  searchTerms["psu"] = ["atx power supply", "sfx power supply"];
+  searchTerms["cooling"] = [
+    "cpu cooler",
+    "cpu liquid cooler",
+    "pc fans",
+    "pc case fans",
+  ];
+  searchTerms["case"] = [
+    "pc case",
+    "atx pc case",
+    "micro atx pc case",
+    "mini itx pc case",
+  ];
+  searchTerms["storage"] = ["ssd", "nvme", "internal hard drive"];
   return searchTerms;
 }
 
@@ -64,7 +76,7 @@ async function main() {
   for (let i = 1; i <= 3; i++) {
     for (const [key, values] of Object.entries(searchTerms)) {
       for (const value of values) {
-        console.log(`${value}: page ${i}`)
+        console.log(`${value}: page ${i}`);
         const config = {
           method: "get",
           url: `https://www.lazada.com.my/catalog/?ajax=true&page=${i}&q=${value}`,
@@ -104,7 +116,6 @@ async function main() {
         // prevent hitting servers too often
         await delay(10000);
       }
-
     }
   }
 }
@@ -122,7 +133,7 @@ function massageData(listItems, type) {
     newObj.sellerName = obj.sellerName;
     newObj.sellerId = obj.sellerId;
     newObj.skuId = obj.skuId;
-    newObj.type = type
+    newObj.type = type;
 
     return newObj;
   });

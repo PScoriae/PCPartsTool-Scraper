@@ -5,7 +5,7 @@ WORKDIR /app
 
 # split COPY into two parts to take advantage of layering system
 # builder will use cache if there are no changes in dependencies
-COPY package.json pnpm-lock.yaml .
+COPY package.json pnpm-lock.yaml ./
 
 # install pnpm
 RUN npm install -g pnpm

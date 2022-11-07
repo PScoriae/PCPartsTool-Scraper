@@ -3,6 +3,7 @@ const axios = require("axios");
 const jsdom = require("jsdom");
 const { JSDOM } = jsdom;
 const { MongoClient } = require("mongodb");
+const cron = require("node-cron");
 
 // pauses execution in milliseconds
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
@@ -129,7 +130,6 @@ function massageData(listItems, type) {
     newObj.imgUrl = obj.image;
     newObj.itemUrl = `https://${obj.itemUrl.slice(2)}`;
     newObj.price = obj.price;
-    newObj.desc = obj.description;
     newObj.sellerName = obj.sellerName;
     newObj.sellerId = obj.sellerId;
     newObj.skuId = obj.skuId;
@@ -169,4 +169,11 @@ async function pushData(data) {
   }
 }
 
-main().catch(console.error);
+console.log("I've started!");
+
+// run once a day at midnight
+cron.schedule("0 0 * * *", () => {
+  console.log("Syncing products...");
+  main().catch(console.error);
+  console.log("Done syncing!");
+});

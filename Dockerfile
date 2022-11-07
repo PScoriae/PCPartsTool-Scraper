@@ -10,6 +10,9 @@ COPY package.json pnpm-lock.yaml ./
 # install pnpm
 RUN npm install -g pnpm
 
+# install timezone support
+RUN apk add --no-cache tzdata
+
 # install deps
 RUN pnpm i
 

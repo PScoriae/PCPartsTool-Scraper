@@ -52,14 +52,43 @@ async function getPopularCPUGPU() {
 
 async function getSearchTerms() {
   const searchTerms = await getPopularCPUGPU();
-  searchTerms["motherboard"] = ["intel motherboard", "amd motherboard"];
-  searchTerms["memory"] = ["ddr3 ram", "ddr4 ram", "ddr5 ram"];
-  searchTerms["psu"] = ["atx power supply", "sfx power supply"];
+  searchTerms["motherboard"] = [
+    "intel motherboard",
+    "amd motherboard",
+    "x570 motherboard",
+    "b550 motherboard",
+    "b450 motherboard",
+    "lga 1200 motherboard",
+    "lga 1700 motherboard",
+    "z690 motherboard",
+    "z590 motherboard",
+  ];
+  searchTerms["memory"] = [
+    "ddr3 ram",
+    "ddr4 ram",
+    "ddr5 ram",
+    "16gb ddr4 ram",
+    "32gb ddr4 ram",
+    "16gb ddr5 ram",
+    "32gb ddr5 ram",
+  ];
+  searchTerms["psu"] = [
+    "atx power supply",
+    "sfx power supply",
+    "computer psu",
+    "400w psu",
+    "500w psu",
+    "600w psu",
+    "700w psu",
+    "800w psu",
+  ];
   searchTerms["cooling"] = [
     "cpu cooler",
     "cpu liquid cooler",
     "pc fans",
     "pc case fans",
+    "120mm pc fans",
+    "140mm pc fans",
   ];
   searchTerms["case"] = [
     "pc case",
@@ -74,7 +103,7 @@ async function getSearchTerms() {
 async function main() {
   let failCount = 0;
   const searchTerms = await getSearchTerms();
-  for (let i = 1; i <= 3; i++) {
+  for (let i = 1; i <= 5; i++) {
     for (const [key, values] of Object.entries(searchTerms)) {
       for (const value of values) {
         console.log(`${value}: page ${i}`);

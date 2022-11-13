@@ -5,19 +5,19 @@ pipeline {
     stages {
         stage("Build Docker Image") {
             steps {
-                sh 'sudo docker build -t localhost:5000/pcpartstool-price-scraper:latest .'
+                sh 'sudo docker build -t 10.0.1.60:5000/PCParts-Scraper:latest .'
             }
         }
 
-        stage("Push Image to Dockerhub") {
+        stage("Push Image to Local Registry") {
           steps {
-            sh 'sudo docker push localhost:5000/pcpartstool-price-scraper:latest'
+            sh 'sudo docker push 10.0.1.60:5000/PCPartsTool-Scraper:latest'
           }
         }
     }
     // remove old builds
     post {
-      always {
+      cleanup {
         sh 'sudo docker system prune -f'
       }
     }

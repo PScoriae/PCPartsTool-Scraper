@@ -63,8 +63,27 @@ This section guides you on how to setup the scraper for use in the context of th
    ```bash
    pnpm i
    ```
-6. Setup a GitHub Webhook on your forked repository to point to your Jenkins instance.
-7. Add a new Jenkins Pipeline job and point it to your forked repo with the following enabled:
+
+# Deployment
+
+## Locally
+
+This is if you want to locally host this using the `docker-compose.local.yaml` file in [PCPartsTool](https://github.com/PScoriae/PCPartsTool).
+
+1. Dockerize the project using the following command:
+   ```bash
+   docker build -t pcpartstool-scraper:latest .
+   ```
+2. Continue with the local deployment instructions in [PCPartsTool](https://github.com/PScoriae/PCPartsTool).
+
+## Cloud
+
+This assumes that you have followed the flow of the rest of the repositories in the PCPartsTool project.
+Jenkins will Dockerize this project on each push to main and then store the image locally in the registry.
+Then, it will get pulled by the main PCPartsTool Jenkins pipeline.
+
+1. Setup a GitHub Webhook on your forked repository to point to your Jenkins instance.
+2. Add a new Jenkins Pipeline job and point it to your forked repo with the following enabled:
    - Do not allow concurrent builds
    - GITScm polling
    - Pipeline Script from SCM

@@ -1,0 +1,42 @@
+{
+  "motherboard": [
+    "intel motherboard",
+    "amd motherboard",
+    "x570 motherboard",
+    "b550 motherboard",
+    "b450 motherboard",
+    "lga 1200 motherboard",
+    "lga 1700 motherboard",
+    "z690 motherboard",
+    "z590 motherboard"
+  ],
+  "memory": [
+    "ddr3 ram",
+    "ddr4 ram",
+    "ddr5 ram",
+    "16gb ddr4 ram",
+    "32gb ddr4 ram",
+    "16gb ddr5 ram",
+    "32gb ddr5 ram"
+  ],
+  "psu": [
+    "atx power supply",
+    "sfx power supply",
+    "computer psu",
+    "400w psu",
+    "500w psu",
+    "600w psu",
+    "700w psu",
+    "800w psu"
+  ],
+  "cooling": [
+    "cpu cooler",
+    "cpu liquid cooler",
+    "pc fans",
+    "pc case fans",
+    "120mm pc fans",
+    "140mm pc fans"
+  ],
+  "case": ["pc case", "atx pc case", "micro atx pc case", "mini itx pc case"],
+  "storage": ["ssd", "nvme", "internal hard drive"]
+}

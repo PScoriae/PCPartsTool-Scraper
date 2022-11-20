@@ -4,6 +4,8 @@ const jsdom = require("jsdom");
 const { JSDOM } = jsdom;
 const { MongoClient } = require("mongodb");
 const cron = require("node-cron");
+const searchTermFile = require("./searchTerms.json");
+const headersFile = require("./headers.json");
 
 // pauses execution in milliseconds
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
@@ -20,14 +22,9 @@ async function getPopularCPUGPU() {
     const config = {
       method: "get",
       url: urls[i],
-      headers: {
-        "User-Agent":
-          "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:106.0) Gecko/20100101 Firefox/106.0",
-        Cookie:
-          "botcheck2=1; botcheck=83b726e0cec79f59a40e3874315b9b1e; xffrom_search=google; xfcsrf=xGHt6ZEmlH-Z-9SS",
-      },
+      headers: headersFile.techPowerUp,
     };
-    // fetch data
+    // fetch trending cpu and gpu skus
     await axios(config)
       .then(function (response) {
         const dom = new JSDOM(response.data.list);
@@ -35,7 +32,8 @@ async function getPopularCPUGPU() {
         for (const datapoint in data) {
           if (
             typeof data[datapoint].textContent !== "undefined" &&
-            data[datapoint].textContent.length > 9
+            data[datapoint].textContent.length > 9 &&
+            data[datapoint].textContent.toLowerCase() !== "polaris"
           )
             currSearchTerms.add(
               encodeURIComponent(data[datapoint].textContent)
@@ -52,51 +50,12 @@ async function getPopularCPUGPU() {
 
 async function getSearchTerms() {
   const searchTerms = await getPopularCPUGPU();
-  searchTerms["motherboard"] = [
-    "intel motherboard",
-    "amd motherboard",
-    "x570 motherboard",
-    "b550 motherboard",
-    "b450 motherboard",
-    "lga 1200 motherboard",
-    "lga 1700 motherboard",
-    "z690 motherboard",
-    "z590 motherboard",
-  ];
-  searchTerms["memory"] = [
-    "ddr3 ram",
-    "ddr4 ram",
-    "ddr5 ram",
-    "16gb ddr4 ram",
-    "32gb ddr4 ram",
-    "16gb ddr5 ram",
-    "32gb ddr5 ram",
-  ];
-  searchTerms["psu"] = [
-    "atx power supply",
-    "sfx power supply",
-    "computer psu",
-    "400w psu",
-    "500w psu",
-    "600w psu",
-    "700w psu",
-    "800w psu",
-  ];
-  searchTerms["cooling"] = [
-    "cpu cooler",
-    "cpu liquid cooler",
-    "pc fans",
-    "pc case fans",
-    "120mm pc fans",
-    "140mm pc fans",
-  ];
-  searchTerms["case"] = [
-    "pc case",
-    "atx pc case",
-    "micro atx pc case",
-    "mini itx pc case",
-  ];
-  searchTerms["storage"] = ["ssd", "nvme", "internal hard drive"];
+  searchTerms["motherboard"] = searchTermFile.motherboard;
+  searchTerms["memory"] = searchTermFile.memory;
+  searchTerms["psu"] = searchTermFile.psu;
+  searchTerms["cooling"] = searchTermFile.cooling;
+  searchTerms["case"] = searchTermFile.case;
+  searchTerms["storage"] = searchTermFile.storage;
   return searchTerms;
 }
 
@@ -110,29 +69,15 @@ async function main() {
         const config = {
           method: "get",
           url: `https://www.lazada.com.my/catalog/?ajax=true&page=${i}&q=${value}`,
-          headers: {
-            "User-Agent":
-              "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:106.0) Gecko/20100101 Firefox/106.0",
-            Accept: "application/json, text/plain, */*",
-            "Accept-Language": "en-US,en;q=0.5",
-            "Accept-Encoding": "gzip, deflate, br",
-            "X-CSRF-TOKEN": "5eebfee8a319b",
-            "X-Requested-With": "XMLHttpRequest",
-            "Sec-Fetch-Dest": "empty",
-            "Sec-Fetch-Mode": "cors",
-            "Sec-Fetch-Site": "same-origin",
-            Referer:
-              "https://www.lazada.com.my/catalog/?q=rtx+3080+ti&_keyori=ss&from=input&spm=a2o4k.searchlist.search.go.44cd28b9EHMiBH",
-            Connection: "keep-alive",
-            Cookie:
-              "__wpkreporterwid_=2630b6dd-7f13-4e34-08a2-62c8546c6d8b; lzd_cid=b0db399a-2c52-4bca-b3da-a391f190c413; t_uid=b0db399a-2c52-4bca-b3da-a391f190c413; t_fv=1660376845807; _bl_uid=06lLe69draXlktiz65R2nn6rnXtL; isg=BPb2GH9DiRz9AXwcHTRuijAVRCz4FzpRU3snFGDf4ll0o5Y9yKeKYVyVu_fPEDJp; l=eBMIpH8nL3bcwqofmOfahurza77OSIOYYuPzaNbMiOCPOJ1H5HaCW6yIp7YMC31Nh6kXR3SVgl72BeYBqj02zHUD1Y9tnxDmn; miidlaz=miidgg5oku1gecha4uiule; lzd_click_id=clkgg5oku1gecha4uduld; _m_h5_tk=417f776803a0cb617826c95006cb9b7a_1667065766897; _m_h5_tk_enc=5ffb73d99515f6b36c88209f1e566d9a; lzd_sid=12faae431b1fbf5e81e5fb00f6e5d242; _tb_token_=5eebfee8a319b; lzd_uid=300000374110; lzd_uti=%7B%22fpd%22%3A%222021-01-08%22%2C%22lpd%22%3A%222021-01-12%22%2C%22cnt%22%3A%2221%22%7D; exlaz=c_lzd_byr:mm_159370573_52051064_2011001151!my1230001:clkgg5oku1gecha4uduld::; hng=MY|en-MY|MYR|458; userLanguageML=en; t_sid=FEgMmJINDMtgXJKzfRRzVaxHj80yUduq; utm_channel=NA; hng=MY|en-MY|MYR|458; hng.sig=3PRPmcBmKLS4UwrxxIzxYKE2BjFcClNbRbYGSaUai_0",
-            TE: "trailers",
-          },
+          headers: headersFile.lazada,
         };
         // fetch data
         axios(config)
           .then(function (response) {
-            const data = massageData(response.data.mods?.listItems, key);
+            const data = massageData(
+              filterData(response.data.mods?.listItems),
+              key
+            );
             pushData(data);
           })
           .catch(function (error) {
@@ -148,6 +93,17 @@ async function main() {
       }
     }
   }
+}
+
+// filter parts with banned words
+function filterData(listItems) {
+  bannedWords = ["laptop", "custom", "budget"];
+  const filteredData = listItems.filter((obj) => {
+    for (const bannedWord of bannedWords) {
+      return !obj.name.toLowerCase().includes(bannedWord);
+    }
+  });
+  return filteredData;
 }
 
 // format lazada data for webapp to use
@@ -182,7 +138,6 @@ async function pushData(data) {
     for (const datapoint of data) {
       await pcParts.updateOne(
         {
-          price: datapoint.price,
           sellerId: datapoint.sellerId,
           skuId: datapoint.skuId,
         },
@@ -198,7 +153,7 @@ async function pushData(data) {
   }
 }
 
-console.log("I've started!");
+console.log("I've started up!");
 
 // run once a day at midnight
 cron.schedule("0 0 * * *", () => {

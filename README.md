@@ -4,7 +4,7 @@
 </a>
 <p>
   <a href="https://github.com/PScoriae/PCPartsTool-Scraper/blob/main/LICENSE.md">
-    <img src="https://img.shields.io/github/license/othneildrew/Best-README-Template.svg?style=for-the-badge">
+        <img src="https://img.shields.io/badge/license-WTFPL-brightgreen?style=for-the-badge">
   </a>
   <a href="https://linkedin.com/in/pierreccesario">
     <img src="https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555">
